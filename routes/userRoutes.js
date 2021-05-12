@@ -1,5 +1,4 @@
 const { verifyAccessToken } = require('../middlewares/requireLogin');
-const generateServerErrorCode = require('../exceptions/skillChaserException');
 
 const jwt = require('jsonwebtoken');
 const keys = require('../config/keys');
