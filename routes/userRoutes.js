@@ -22,6 +22,10 @@ module.exports = app => {
         }
     }
 
+    app.get('/', async (req, res) => {
+        return res.status(200).json("The API is up and running. For usage refer the documentation");
+    });
+
     app.get('/api/skillChasers/users/:id', verifyAccessToken, async (req, res) => {
         const user = await User.findOne({
             _id: req.params.id
