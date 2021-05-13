@@ -16,7 +16,7 @@ Logger.stream = {
 module.exports = app => {
 
   app.get('/api/skillChasers/quotes', verifyAccessToken, async (req, res) => {
-    Logger.info('Read all quotes : ' + req.connection.remoteAddress);
+    Logger.info('Read all quotes : ' + req.ip);
     const quotes = await Quote.find({});
     if (quotes) {
       Logger.info('success');
@@ -27,7 +27,7 @@ module.exports = app => {
   });
 
   app.get('/api/skillChasers/quote/:id', verifyAccessToken, async (req, res) => {
-    Logger.info('Read all quotes by id: ' + req.connection.remoteAddress);
+    Logger.info('Read all quotes by id: ' + req.ip);
     const quote = await Quote.findOne({
       _id: req.params.id
     });
@@ -40,7 +40,7 @@ module.exports = app => {
   });
 
   app.get('/api/skillChasers/quotes/:status', verifyAccessToken, async (req, res) => {
-    Logger.info('Read all quotes by status: ' + req.connection.remoteAddress);
+    Logger.info('Read all quotes by status: ' + req.ip);
     const status = req.params.status;
     const quotes = await Quote.find({
       "status": status
@@ -53,7 +53,7 @@ module.exports = app => {
   });
 
   app.post('/api/skillChasers/register/quote', verifyAccessToken, async (req, res) => {
-    Logger.info('Register quotes: ' + req.connection.remoteAddress);
+    Logger.info('Register quotes: ' + req.ip);
     const { problemDescription, skills, placeOfWork, numOfConsultant, projectDuration, status, remark } = req.body;
 
     const quote = new Quote({
@@ -81,7 +81,7 @@ module.exports = app => {
   });
 
   app.put('/api/skillChasers/approve/quote/:id', verifyAccessToken, async (req, res) => {
-    Logger.info('approve a quote: ' + req.connection.remoteAddress);
+    Logger.info('approve a quote: ' + req.ip);
     const { status, remark } = req.body;
 
     var query = { _id: req.params.id };

@@ -20,7 +20,7 @@ module.exports = app => {
 
     //login user
     app.post('/api/skillChasers/user/login', async (req, res) => {
-        Logger.info('Loggin called : ' + req.connection.remoteAddress);
+        Logger.info('Loggin called : ' + req.ip);
         try {
             const { userName, password } = req.body;
             const user = await User.findOne({ "account.userName": userName });

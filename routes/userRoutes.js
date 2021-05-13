@@ -33,12 +33,12 @@ module.exports = app => {
     }
 
     app.get('/', async (req, res) => {
-        Logger.info('api : ' + req.connection.remoteAddress);
+        Logger.info('api : ' + req.ip);
         return res.status(200).json("The API is up and running. For usage refer the documentation");
     });
 
     app.get('/api/skillChasers/users/:id', verifyAccessToken, async (req, res) => {
-        Logger.info('Read user by id : ' + req.connection.remoteAddress);
+        Logger.info('Read user by id : ' + req.ip);
         const user = await User.findOne({
             _id: req.params.id
         });
@@ -52,7 +52,7 @@ module.exports = app => {
 
     app.get('/api/skillChasers/users/name/:userName', verifyAccessToken, async (req, res) => {
         Logger.info('Read user by user name : ' + req.connection.remoteAddress);
-        const user = await getUserByName(req.params.userName);
+        const user = await getUserByName(req.ip);
         if (user) {
             res.status(200).json({ "status": "OK", "error": "{}", "payload": user });
         } else {
@@ -72,7 +72,7 @@ module.exports = app => {
     });
 
     app.post('/api/skillChasers/register/users', async (req, res) => {
-        Logger.info('Register User : ' + req.connection.remoteAddress);
+        Logger.info('Register User : ' + req.ip);
         let { name, dateOfBirth, address, email, role, status, skills, projects, eduInfo, certificate, resource, account, createdOnDate } = req.body;
 
         //hash password

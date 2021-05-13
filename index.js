@@ -40,7 +40,6 @@ app.use('*', cors());
 
 app.use(bodyParser.json());
 
-
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -50,6 +49,5 @@ require('./routes/userAccountRoutes')(app);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  Logger.info('AppRouter portNumber : ' + PORT);
-  console.log(`Listening on port`, PORT);
+  Logger.info('Skill Chasers started listen to portNumber : ' + PORT);
 });
