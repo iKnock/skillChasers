@@ -1,8 +1,7 @@
+require('dotenv').config();
 module.exports = {
-  mongoURI: 'mongodb+srv://iknock79:7aOAuYtYlrLISTks@cluster0.hlyz7.mongodb.net/skillChasers?retryWrites=true&w=majority',
-  cookieKey: '123123123',
-  passportSecret: '8mkniDQOqacXtlRD3gA4n2az',
-  passportExpiresIn: 10000,
-};
-
-
+  mongoURI: process.env.MONGO_URI,
+  cookieKey: process.env.COOKIE_KEY,
+  passportSecret: process.env.PASSPORT_SECRET,
+  passportExpiresIn: process.env.PASSPORT_EXPIRES_IN
+}
