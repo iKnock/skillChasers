@@ -120,7 +120,7 @@ module.exports = app => {
             }
         } catch (e) {
             console.log("exception occured: " + e)
-            res.status(500).json({ "status": "KO", "error": "Service unavailable", "payload": "{}" });
+            res.status(500).json({ "status": "KO", "error": e.message, "payload": "{}" });
             //generateServerErrorCode(res, 500, e, SOME_THING_WENT_WRONG);
         }
     });
