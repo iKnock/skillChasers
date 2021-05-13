@@ -6,10 +6,21 @@ const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 
+// import & configure logger
+const Logger = require('../log/logger.js');
+const morgan = require('morgan');
+
+Logger.stream = {
+    write: function (message, encoding) {
+        Logger.info(message, encoding);
+    },
+};
+
 module.exports = app => {
 
     //login user
     app.post('/api/skillChasers/user/login', async (req, res) => {
+        Logger.info('Loggin called : ' + req.connection.remoteAddress);
         try {
             const { userName, password } = req.body;
             const user = await User.findOne({ "account.userName": userName });

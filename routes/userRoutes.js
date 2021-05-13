@@ -8,6 +8,16 @@ const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 
+// import & configure logger
+const Logger = require('../log/logger.js');
+const morgan = require('morgan');
+
+Logger.stream = {
+    write: function (message, encoding) {
+        Logger.info(message, encoding);
+    },
+};
+
 module.exports = app => {
 
     async function getUserByName(userName) {
@@ -23,10 +33,12 @@ module.exports = app => {
     }
 
     app.get('/', async (req, res) => {
+        Logger.info('api : ' + req.connection.remoteAddress);
         return res.status(200).json("The API is up and running. For usage refer the documentation");
     });
 
     app.get('/api/skillChasers/users/:id', verifyAccessToken, async (req, res) => {
+        Logger.info('Read user by id : ' + req.connection.remoteAddress);
         const user = await User.findOne({
             _id: req.params.id
         });
@@ -39,6 +51,7 @@ module.exports = app => {
     });
 
     app.get('/api/skillChasers/users/name/:userName', verifyAccessToken, async (req, res) => {
+        Logger.info('Read user by user name : ' + req.connection.remoteAddress);
         const user = await getUserByName(req.params.userName);
         if (user) {
             res.status(200).json({ "status": "OK", "error": "{}", "payload": user });
@@ -49,6 +62,7 @@ module.exports = app => {
     });
 
     app.get('/api/skillChasers/users', verifyAccessToken, async (req, res) => {
+        Logger.info('Read all users : ' + req.ip);
         const users = await User.find({});
         if (users) {
             res.status(200).json({ "status": "OK", "error": "{}", "payload": users });
@@ -58,6 +72,7 @@ module.exports = app => {
     });
 
     app.post('/api/skillChasers/register/users', async (req, res) => {
+        Logger.info('Register User : ' + req.connection.remoteAddress);
         let { name, dateOfBirth, address, email, role, status, skills, projects, eduInfo, certificate, resource, account, createdOnDate } = req.body;
 
         //hash password

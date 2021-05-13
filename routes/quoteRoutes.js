@@ -3,11 +3,23 @@ const { verifyAccessToken } = require('../middlewares/requireLogin');
 
 const Quote = mongoose.model('Quote');
 
+// import & configure logger
+const Logger = require('../log/logger.js');
+const morgan = require('morgan');
+
+Logger.stream = {
+  write: function (message, encoding) {
+    Logger.info(message, encoding);
+  },
+};
+
 module.exports = app => {
 
   app.get('/api/skillChasers/quotes', verifyAccessToken, async (req, res) => {
+    Logger.info('Read all quotes : ' + req.connection.remoteAddress);
     const quotes = await Quote.find({});
     if (quotes) {
+      Logger.info('success');
       res.status(200).json({ "status": "OK", "error": "{}", "payload": quotes });
     } else {
       res.status(404).json({ "status": "KO", "Quotes not found": "{}", "payload": "{}" });
@@ -15,6 +27,7 @@ module.exports = app => {
   });
 
   app.get('/api/skillChasers/quote/:id', verifyAccessToken, async (req, res) => {
+    Logger.info('Read all quotes by id: ' + req.connection.remoteAddress);
     const quote = await Quote.findOne({
       _id: req.params.id
     });
@@ -27,6 +40,7 @@ module.exports = app => {
   });
 
   app.get('/api/skillChasers/quotes/:status', verifyAccessToken, async (req, res) => {
+    Logger.info('Read all quotes by status: ' + req.connection.remoteAddress);
     const status = req.params.status;
     const quotes = await Quote.find({
       "status": status
@@ -39,6 +53,7 @@ module.exports = app => {
   });
 
   app.post('/api/skillChasers/register/quote', verifyAccessToken, async (req, res) => {
+    Logger.info('Register quotes: ' + req.connection.remoteAddress);
     const { problemDescription, skills, placeOfWork, numOfConsultant, projectDuration, status, remark } = req.body;
 
     const quote = new Quote({
@@ -66,6 +81,7 @@ module.exports = app => {
   });
 
   app.put('/api/skillChasers/approve/quote/:id', verifyAccessToken, async (req, res) => {
+    Logger.info('approve a quote: ' + req.connection.remoteAddress);
     const { status, remark } = req.body;
 
     var query = { _id: req.params.id };
