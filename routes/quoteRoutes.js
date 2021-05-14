@@ -3,20 +3,12 @@ const { verifyAccessToken } = require('../middlewares/requireLogin');
 
 const Quote = mongoose.model('Quote');
 
-// import & configure logger
-const Logger = require('../log/logger.js');
-const morgan = require('morgan');
-
-Logger.stream = {
-  write: function (message, encoding) {
-    Logger.info(message, encoding);
-  },
-};
+const Logger = require('../logger/logger');
 
 module.exports = app => {
 
   app.get('/api/skillChasers/quotes', verifyAccessToken, async (req, res) => {
-    Logger.info('Read all quotes : ' + req.ip);
+    Logger.info('<Quote Route: > - Read all quotes : ' + req.ip);
     const quotes = await Quote.find({});
     if (quotes) {
       Logger.info('success');
@@ -27,7 +19,7 @@ module.exports = app => {
   });
 
   app.get('/api/skillChasers/quote/:id', verifyAccessToken, async (req, res) => {
-    Logger.info('Read all quotes by id: ' + req.ip);
+    Logger.info('<Quote Route: > -  Read all quotes by id: ' + req.ip);
     const quote = await Quote.findOne({
       _id: req.params.id
     });
@@ -40,7 +32,7 @@ module.exports = app => {
   });
 
   app.get('/api/skillChasers/quotes/:status', verifyAccessToken, async (req, res) => {
-    Logger.info('Read all quotes by status: ' + req.ip);
+    Logger.info('<Quote Route: > - Read all quotes by status: ' + req.ip);
     const status = req.params.status;
     const quotes = await Quote.find({
       "status": status
@@ -71,17 +63,17 @@ module.exports = app => {
       if (savedQuote) {
         return res.status(200).json({ "status": "OK", "error": "{}", "payload": savedQuote });
       } else {
-        console.log("couldnt save the quote in the database")
+        Logger.error('<Quote Route: > - couldnt save the quote in the database' + req.ip);
         return res.status(500).json({ "status": "KO", "error": "Internal Server Error", "payload": "{}" });
       }
     } catch (e) {
-      console.log("exception during save" + e)
-      return res.status(500).json({ "status": "KO", "error": "Internal Server Error" + e, "payload": "{}" });
+      Logger.error('<Quote Route: > - ' + e.message + '-' + req.ip);
+      return res.status(500).json({ "status": "KO", "error": e.message, "payload": "{}" });
     }
   });
 
   app.put('/api/skillChasers/approve/quote/:id', verifyAccessToken, async (req, res) => {
-    Logger.info('approve a quote: ' + req.ip);
+    Logger.info('<Quote Route: > - approve a quote: ' + req.ip);
     const { status, remark } = req.body;
 
     var query = { _id: req.params.id };
@@ -97,12 +89,12 @@ module.exports = app => {
       if (updatedQuote) {
         return res.status(200).json({ "status": "OK", "error": "{}", "payload": updatedQuote });
       } else {
-        console.log("couldnt save the quote in the database")
+        Logger.error('<Quote Route: > - couldnt update the quote in the database' + req.ip);
         return res.status(500).json({ "status": "KO", "error": "Internal Server Error", "payload": "{}" });
       }
     } catch (e) {
-      console.log("exception during save" + e)
-      return res.status(500).json({ "status": "KO", "error": "Internal Server Error" + e, "payload": "{}" });
+      Logger.error('<Quote Route: > - ' + e.message + '-' + req.ip);
+      return res.status(500).json({ "status": "KO", "error": e.message, "payload": "{}" });
     }
 
   });

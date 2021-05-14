@@ -13,18 +13,10 @@ require('./models/User');
 require('./models/Quote');
 require('./services/passport');
 
-// import & configure logger
-const Logger = require('./log/logger.js');
-const morgan = require('morgan');
-
-Logger.stream = {
-  write: function (message, encoding) {
-    Logger.info(message, encoding);
-  },
-};
+const Logger = require('./logger/logger');
 
 mongoose.Promise = global.Promise;
-mongoose.connect(keys.mongoURI);
+mongoose.connect(keys.mongoURI, { useUnifiedTopology: true, useNewUrlParser: true });
 
 const app = express();
 
@@ -49,5 +41,5 @@ require('./routes/userAccountRoutes')(app);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  Logger.info('Skill Chasers started listen to portNumber : ' + PORT);
+  Logger.info('<index: > - api started listen to portNumber : ' + PORT);
 });

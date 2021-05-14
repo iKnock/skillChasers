@@ -39,7 +39,7 @@ const userSchema = new Schema({
     type: [String],
     required: [true, 'Status is required!'],
     trim: true,
-    enum: ['created', 'approved']
+    enum: ['active', 'non active']
   },
   skills: [String],
   projects: [{ projName: String, description: String, tech: [String] }],

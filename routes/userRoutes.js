@@ -7,21 +7,12 @@ const bcrypt = require('bcrypt');
 
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
-
-// import & configure logger
-const Logger = require('../log/logger.js');
-const morgan = require('morgan');
-
-Logger.stream = {
-    write: function (message, encoding) {
-        Logger.info(message, encoding);
-    },
-};
+const Logger = require('../logger/logger');
 
 module.exports = app => {
 
     async function getUserByName(userName) {
-        console.log("getUserByName: " + userName)
+        Logger.info('userName : ' + userName);
         const user = await User.findOne({
             "account.userName": userName
         });
@@ -38,7 +29,7 @@ module.exports = app => {
     });
 
     app.get('/api/skillChasers/users/:id', verifyAccessToken, async (req, res) => {
-        Logger.info('Read user by id : ' + req.ip);
+        Logger.info('<User Route: > - Read user by id : ' + req.ip);
         const user = await User.findOne({
             _id: req.params.id
         });
@@ -51,7 +42,7 @@ module.exports = app => {
     });
 
     app.get('/api/skillChasers/users/name/:userName', verifyAccessToken, async (req, res) => {
-        Logger.info('Read user by user name : ' + req.connection.remoteAddress);
+        Logger.info('<User Route: > - Read user by user name : ' + req.connection.remoteAddress);
         const user = await getUserByName(req.ip);
         if (user) {
             res.status(200).json({ "status": "OK", "error": "{}", "payload": user });
@@ -62,7 +53,7 @@ module.exports = app => {
     });
 
     app.get('/api/skillChasers/users', verifyAccessToken, async (req, res) => {
-        Logger.info('Read all users : ' + req.ip);
+        Logger.info('<User Route: > - Read all users : ' + req.ip);
         const users = await User.find({});
         if (users) {
             res.status(200).json({ "status": "OK", "error": "{}", "payload": users });
@@ -72,19 +63,19 @@ module.exports = app => {
     });
 
     app.post('/api/skillChasers/register/users', async (req, res) => {
-        Logger.info('Register User : ' + req.ip);
+        Logger.info('<User Route: > - Register User : ' + req.ip);
         let { name, dateOfBirth, address, email, role, status, skills, projects, eduInfo, certificate, resource, account, createdOnDate } = req.body;
 
         //hash password
         bcrypt.hash(account.password, 5, (err, hash) => {
             if (err) {
+                Logger.info('<User Route: > - Error during password hashing - ' + err + ' - ' + req.ip);
                 res.status(500).json({ "status": "KO", "error": "Error during password hashing", "payload": "{}" });
             }
             account.password = hash
         });
 
         const uName = account.userName
-        console.log("uName: " + uName)
         try {
             const userDb = await getUserByName(uName);
             if (!userDb) {
@@ -115,11 +106,11 @@ module.exports = app => {
                 //delete userToReturn.hashedPassword;
                 res.status(200).json({ "status": "OK", "error": "{}", "payload": userToReturn });
             } else {
-                console.log("user already exists")
+                Logger.info('<User Route: > - user already exists - ' + req.ip);
                 res.status(403).json({ "status": "KO", "error": "User Name already exist", "payload": "{}" });
             }
         } catch (e) {
-            console.log("exception occured: " + e)
+            Logger.error('<User Route: > - ' + e.message + '-' + req.ip);
             res.status(500).json({ "status": "KO", "error": e.message, "payload": "{}" });
             //generateServerErrorCode(res, 500, e, SOME_THING_WENT_WRONG);
         }

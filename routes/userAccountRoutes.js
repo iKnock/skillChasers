@@ -6,21 +6,13 @@ const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 
-// import & configure logger
-const Logger = require('../log/logger.js');
-const morgan = require('morgan');
-
-Logger.stream = {
-    write: function (message, encoding) {
-        Logger.info(message, encoding);
-    },
-};
+const Logger = require('../logger/logger');
 
 module.exports = app => {
 
     //login user
     app.post('/api/skillChasers/user/login', async (req, res) => {
-        Logger.info('Loggin called : ' + req.ip);
+        Logger.info('<User Account: > - Loggin called : ' + req.ip);
         try {
             const { userName, password } = req.body;
             const user = await User.findOne({ "account.userName": userName });
@@ -40,17 +32,17 @@ module.exports = app => {
                         //delete userToReturn.hashedPassword;
                         res.status(200).json({ "status": "OK", "error": "{}", "payload": { "token": token, "user name": user.account.userName, "role": user.role } });
                     } else {
-                        console.log("Login Failed Password Error")
+                        Logger.info('<User Account: > - Login Failed Password Error ' + req.ip);
                         res.status(403).json({ "status": "KO", "error": "Login Failed, Wrong Password", "payload": "{}" });
                     }
                 });
 
             } else {
-                console.log("Login Failed Email Error")
+                Logger.info('<User Account: > - Login Failed Email Error ' + req.ip);
                 res.status(403).json({ "status": "KO", "error": "Login Failed, Wrong User Name", "payload": "{}" });
             }
         } catch (e) {
-            console.log("Exception happen: " + e)
+            Logger.info('<User Account: > - ' + e.message + '-' + req.ip);
         }
     });
 };
