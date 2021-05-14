@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const keys = require('../config/keys');
 
+const Logger = require('../logger/logger');
+
 module.exports = {
   verifyAccessToken: (req, res, next) => {
     if (req.headers && req.headers.authorization) {
