@@ -19,7 +19,6 @@ module.exports = app => {
             if (user && user.account) {
                 bcrypt.compare(password, user.account.password, function (err, isMatched) {
                     if (err) {
-                        console.log("Error during unhasing: " + err)
                         res.status(500).json({ "status": "KO", "error": "Error during password unhashing", "payload": "{}" });
                     }
 
