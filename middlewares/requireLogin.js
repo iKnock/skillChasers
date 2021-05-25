@@ -14,7 +14,7 @@ module.exports = {
           next();
         } catch (error) {
           // error
-          Logger.error('<middleware: > - ' + error.message + '-' + req.ip);
+          Logger.error('<middleware: > - ' + error.message + '-' + req.ip + req.header.host);
           return res.status(401).send({ status: "KO", error: 'Unauthorized, ' + error.message, payload: "{}" });
         }
       } else {
