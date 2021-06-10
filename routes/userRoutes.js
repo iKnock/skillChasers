@@ -64,7 +64,7 @@ module.exports = app => {
 
     app.post('/api/skillChasers/register/users', async (req, res) => {
         Logger.info('<User Route: > - Register User : ' + req.ip);
-        let { name, dateOfBirth, address, email, role, status, skills, projects, eduInfo, certificate, resource, account, createdOnDate } = req.body;
+        let { image, firstName, lastName, dateOfBirth, address, email, role, status, skills, projects, eduInfo, certificate, resource, account, createdOnDate } = req.body;
 
         //hash password
         bcrypt.hash(account.password, 5, (err, hash) => {
@@ -81,7 +81,9 @@ module.exports = app => {
             if (!userDb) {
 
                 const user = new User({
-                    name,
+                    image,
+                    firstName,
+                    lastName,
                     dateOfBirth,
                     address,
                     email,
@@ -98,6 +100,7 @@ module.exports = app => {
 
                 const savedUser = await user.save();
 
+                res.status(200).json({ "status": "OK", "savedUser": savedUser });
                 // Sign token
                 const token = jwt.sign({ userName: uName }, keys.passportSecret, {
                     expiresIn: keys.passportExpiresIn,

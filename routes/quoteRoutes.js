@@ -46,9 +46,10 @@ module.exports = app => {
 
   app.post('/api/skillChasers/register/quote', verifyAccessToken, async (req, res) => {
     Logger.info('Register quotes: ' + req.ip);
-    const { problemDescription, skills, placeOfWork, numOfConsultant, projectDuration, status, remark } = req.body;
+    const { userName, problemDescription, skills, placeOfWork, numOfConsultant, projectDuration, status, remark } = req.body;
 
     const quote = new Quote({
+      userName,
       problemDescription,
       skills,
       placeOfWork,
