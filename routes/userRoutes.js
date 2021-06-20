@@ -43,7 +43,7 @@ module.exports = app => {
 
     app.get('/api/skillChasers/users/skills/:skill', verifyAccessToken, async (req, res) => {
         Logger.info('<User Route: > - Read user by skills : ' + req.ip);
-        const user = await User.findOne({
+        const user = await User.find({
             "skills": req.params.skill
         });
         if (user) {
