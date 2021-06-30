@@ -56,7 +56,7 @@ module.exports = app => {
 
     app.get('/api/skillChasers/users/name/:userName', verifyAccessToken, async (req, res) => {
         Logger.info('<User Route: > - Read user by user name : ' + req.ip);
-        const user = await getUserByName(req.userName);
+        const user = await getUserByName(req.params.userName);
         Logger.info('<User Route: > - Read user by user name : ' + req.ip);
         if (user) {
             res.status(200).json({ "status": "OK", "error": "{}", "payload": user });
