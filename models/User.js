@@ -43,7 +43,7 @@ const userSchema = new Schema({
     type: [String],
     required: [true, 'Atleast one Role is required!'],
     trim: true,
-    enum: ['consultant', 'manager']
+    enum: ['consultant', 'manager', 'client']
   },
   status: {
     type: [String],
