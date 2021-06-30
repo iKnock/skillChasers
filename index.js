@@ -31,6 +31,7 @@ app.use(
 app.use('*', cors());
 
 app.use(bodyParser.json());
+app.use(bodyParser({ limit: '5mb' }));
 
 app.use(passport.initialize());
 app.use(passport.session());
