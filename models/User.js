@@ -52,7 +52,7 @@ const userSchema = new Schema({
     enum: ['active', 'non active']
   },
   skills: [String],
-  projects: [{ projName: String, description: String, tech: [String] }],
+  projects: [{ name: String, description: String, tech: [String] }],
   eduInfo: [{ degreeName: String, yearOfGraduation: String }],
   certificate: [{ certificateName: String, certificateDescription: String, certifiedOnDate: String }],
 
