@@ -25,7 +25,7 @@ const quoteSchema = new Schema({
         type: String,
         required: [true, 'Put the required skills!'],
         trim: true,
-        enum: ['created', 'approved']
+        enum: ['created', 'approved', 'rejected']
     },
     remark: String,
     date: { type: Date, default: Date.now },
