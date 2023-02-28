@@ -15,6 +15,7 @@ if (!fs.existsSync(logDirectory)) {
     fs.mkdirSync(logDirectory);
 }
 
+
 // app loger config
 const Logger = createLogger({
     defaultMeta: { service: 'skill-chasers-service' },
