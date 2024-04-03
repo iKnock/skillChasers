@@ -2,7 +2,8 @@ require('dotenv').config();
 
 module.exports = {
   logDirName: "skillchaserslog",
-  mongoURI: "mongodb://localhost:27017/skillchasersdb",
+  //mongoURI: "mongodb://localhost:27017/skillchasersdb",
+  mongoURI: "mongodb://mongodb:27017/skillchasersdb",
   cookieKey: "cookieKey",
   passportSecret: "passDevSec",
   passportExpiresIn: 1000000
