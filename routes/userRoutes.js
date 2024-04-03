@@ -4,10 +4,13 @@ const jwt = require('jsonwebtoken');
 const keys = require('../config/keys');
 
 const bcrypt = require('bcrypt');
+const util = require('util');
 
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const Logger = require('../logger/logger');
+
+const hashAsync = util.promisify(bcrypt.hash);
 
 module.exports = app => {
 
@@ -20,6 +23,16 @@ module.exports = app => {
             return user;
         } else {
             return null;
+        }
+    }
+
+    async function hashPassword(password) {
+        try {
+            const hash = await hashAsync(password, 5);
+            return hash;
+        } catch (err) {
+            Logger.info('<User Route: > - Error during password hashing - ' + err + ' - ' + req.ip);
+            throw new Error("Error during password hashing");
         }
     }
 
@@ -80,18 +93,10 @@ module.exports = app => {
         Logger.info('<User Route: > - Register User : ' + req.ip);
         let { image, firstName, lastName, dateOfBirth, address, email, role, status, skills, projects, eduInfo, certificate, resource, account, createdOnDate } = req.body;
 
-        //hash password
-        bcrypt.hash(account.password, 5, (err, hash) => {
-            if (err) {
-                Logger.info('<User Route: > - Error during password hashing - ' + err + ' - ' + req.ip);
-                res.status(500).json({ "status": "KO", "error": "Error during password hashing", "payload": "{}" });
-            }
-            account.password = hash
-        });
-
-        const uName = account.userName
         try {
-            const userDb = await getUserByName(uName);
+            account.password = await hashPassword(account.password);
+            const userDb = await getUserByName(account.userName);
+
             if (!userDb) {
 
                 const user = new User({
@@ -114,12 +119,12 @@ module.exports = app => {
 
                 const savedUser = await user.save();
 
-                res.status(200).json({ "status": "OK", "savedUser": savedUser });
                 // Sign token
-                const token = jwt.sign({ userName: uName }, keys.passportSecret, {
+                const token = jwt.sign({ userName: account.userName }, keys.passportSecret, {
                     expiresIn: keys.passportExpiresIn,
                 });
                 const userToReturn = { ...savedUser.toJSON(), ...{ token } };
+
                 //delete userToReturn.hashedPassword;
                 res.status(200).json({ "status": "OK", "error": "{}", "payload": userToReturn });
             } else {

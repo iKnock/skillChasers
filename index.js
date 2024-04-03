@@ -36,9 +36,9 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
-require('./routes/userRouteskkk')(app);
-require('./routes/quoteRouteskkk')(app);
-require('./routes/userAccountRouteskkk')(app);
+require('./routes/userRoutes')(app);
+require('./routes/quoteRoutes')(app);
+require('./routes/userAccountRoutes')(app);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

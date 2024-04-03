@@ -3,6 +3,7 @@ const path = require('path');
 
 const morgan = require('morgan');
 const { createLogger, format, transports } = require('winston');
+const keys = require('../config/keys');
 const { combine, timestamp, label, printf } = format;
 
 const apiFormat = printf(({ level, message, label, timestamp }) => {
@@ -10,11 +11,11 @@ const apiFormat = printf(({ level, message, label, timestamp }) => {
 });
 
 // create log file if not exist
-const logDirectory = path.join(__dirname, process.env.LOG_DIR_NAME);
+//const logDirectory = path.join(__dirname, process.env.LOG_DIR_NAME);
+const logDirectory = path.join(__dirname, keys.logDirName);
 if (!fs.existsSync(logDirectory)) {
     fs.mkdirSync(logDirectory);
 }
-
 
 // app loger config
 const Logger = createLogger({

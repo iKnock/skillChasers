@@ -25,7 +25,7 @@ module.exports = app => {
                     if (isMatched === true) {
                         // Sign token
                         const token = jwt.sign({ userName }, keys.passportSecret, {
-                            expiresIn: 1000000,
+                            expiresIn: keys.passportExpiresIn,
                         });
                         const userToReturn = { ...user.toJSON(), ...{ token } };
                         //delete userToReturn.hashedPassword;
