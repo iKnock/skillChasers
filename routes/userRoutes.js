@@ -1,18 +1,17 @@
-const { verifyAccessToken } = require('../middlewares/requireLogin');
+import { verifyAccessToken } from '../middlewares/requireLogin.js';
 
-const jwt = require('jsonwebtoken');
-const keys = require('../config/keys');
+import jwt from 'jsonwebtoken';
+import * as keys from '../config/keys.mjs';
+import bcrypt from 'bcrypt';
+import util from 'util';
 
-const bcrypt = require('bcrypt');
-const util = require('util');
+import User from '../models/User.js'
 
-const mongoose = require('mongoose');
-const User = mongoose.model('User');
-const Logger = require('../logger/logger');
+import Logger from '../logger/logger.js';
 
 const hashAsync = util.promisify(bcrypt.hash);
 
-module.exports = app => {
+const userRoutes = app => {
 
     async function getUserByName(userName) {
         Logger.info('userName : ' + userName);
@@ -138,3 +137,5 @@ module.exports = app => {
         }
     });
 };
+
+export { userRoutes };

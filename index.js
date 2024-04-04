@@ -1,22 +1,30 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cookieSession = require('cookie-session');
-const cookieParser = require('cookie-parser');
+import express from 'express';
+import mongoose from 'mongoose';
+const { connect } = mongoose;
 
-const cors = require('cors');
+import cookieSession from 'cookie-session';
+import cookieParser from 'cookie-parser';
 
-const passport = require('passport');
-const bodyParser = require('body-parser');
-const keys = require('./config/keys');
+import cors from 'cors';
 
-require('./models/User');
-require('./models/Quote');
-require('./services/passport');
+import passport from 'passport';
 
-const Logger = require('./logger/logger');
+import bodyparser from 'body-parser';
+const { json, urlencoded } = bodyparser;
 
-mongoose.Promise = global.Promise;
-mongoose.connect(keys.mongoURI, { useUnifiedTopology: true, useNewUrlParser: true });
+import { mongoURI, cookieKey } from './config/keys.mjs';
+
+import { userRoutes } from './routes/userRoutes.js';
+import { quoteRoutes } from './routes/quoteRoutes.js';
+import { userAccountRoutes } from './routes/userAccountRoutes.js';
+
+import './models/User.js';
+import './models/Quote.js';
+import './services/passport.js';
+
+import * as info from './logger/logger.js';
+
+connect(mongoURI, { useUnifiedTopology: true, useNewUrlParser: true });
 
 const app = express();
 
@@ -24,23 +32,23 @@ app.use(cookieParser());
 app.use(
   cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000,
-    keys: [keys.cookieKey]
+    keys: [cookieKey]
   })
 );
 
 app.use('*', cors());
 
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+app.use(json({ limit: '50mb' }));
+app.use(urlencoded({ limit: '50mb', extended: true }));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-require('./routes/userRoutes')(app);
-require('./routes/quoteRoutes')(app);
-require('./routes/userAccountRoutes')(app);
+userRoutes(userRoutes);
+quoteRoutes(quoteRoutes);
+userAccountRoutes(userAccountRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  Logger.info('<index: > - api started listen to portNumber : ' + PORT);
+  info('<index: > - api started listen to portNumber : ' + PORT);
 });
