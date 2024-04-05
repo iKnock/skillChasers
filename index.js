@@ -4,16 +4,13 @@ const { connect } = mongoose;
 
 import cookieSession from 'cookie-session';
 import cookieParser from 'cookie-parser';
-
 import cors from 'cors';
-
 import passport from 'passport';
-
 import bodyparser from 'body-parser';
+
 const { json, urlencoded } = bodyparser;
 
 import { mongoURI, cookieKey } from './config/keys.mjs';
-
 import { userRoutes } from './routes/userRoutes.js';
 import { quoteRoutes } from './routes/quoteRoutes.js';
 import { userAccountRoutes } from './routes/userAccountRoutes.js';
@@ -36,10 +33,8 @@ app.use(
 );
 
 app.use('*', cors());
-
 app.use(json({ limit: '50mb' }));
 app.use(urlencoded({ limit: '50mb', extended: true }));
-
 app.use(passport.initialize());
 app.use(passport.session());
 
