@@ -1,7 +1,7 @@
 import jsonwebtoken from 'jsonwebtoken';
 const { verify } = jsonwebtoken;
 
-import { passportSecret } from '../config/keys.mjs';
+import { config } from '../config/keys.mjs';
 
 import Logger from '../logger/logger.js';
 
@@ -11,7 +11,7 @@ export function verifyAccessToken(req, res, next) {
     if (tokens && tokens.length === 2) {
       const jwtToken = tokens[1];
       try {
-        verify(jwtToken, passportSecret);
+        verify(jwtToken, config.passportSecret);
         next();
       } catch (error) {
         // error

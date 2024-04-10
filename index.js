@@ -10,7 +10,7 @@ import bodyparser from 'body-parser';
 
 const { json, urlencoded } = bodyparser;
 
-import { mongoURI, cookieKey } from './config/keys.mjs';
+import { config } from './config/keys.mjs';
 import { userRoutes } from './routes/userRoutes.js';
 import { quoteRoutes } from './routes/quoteRoutes.js';
 import { userAccountRoutes } from './routes/userAccountRoutes.js';
@@ -20,7 +20,7 @@ import './models/Quote.js';
 import './services/passport.js';
 import Logger from './logger/logger.js';
 
-connect(mongoURI, { useUnifiedTopology: true, useNewUrlParser: true });
+connect(config.mongoURI, { useUnifiedTopology: true, useNewUrlParser: true });
 
 const app = express();
 
@@ -28,7 +28,7 @@ app.use(cookieParser());
 app.use(
   cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000,
-    keys: [cookieKey]
+    keys: [config.cookieKey]
   })
 );
 

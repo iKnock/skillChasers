@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import * as keys from '../config/keys.mjs';
+import { config } from '../config/keys.mjs';
 import bcrypt from 'bcrypt';
 import User from '../models/User.js';
 import Logger from '../logger/logger.js';
@@ -20,8 +20,8 @@ const userAccountRoutes = app => {
 
                     if (isMatched === true) {
                         // Sign token
-                        const token = jwt.sign({ userName }, keys.passportSecret, {
-                            expiresIn: keys.passportExpiresIn,
+                        const token = jwt.sign({ userName }, config.passportSecret, {
+                            expiresIn: config.passportExpiresIn,
                         });
                         const userToReturn = { ...user.toJSON(), ...{ token } };
                         //delete userToReturn.hashedPassword;

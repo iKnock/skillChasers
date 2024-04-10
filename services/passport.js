@@ -8,7 +8,7 @@ const { verify } = jsonwebtoken;
 var ExtractJwt = _ExtractJwt;
 var JwtStrategy = _Strategy;
 
-import { passportSecret } from '../config/keys.mjs';
+import { config } from '../config/keys.mjs';
 
 import mongoose from 'mongoose';
 const { model } = mongoose;
@@ -18,7 +18,7 @@ const User = model('User');
 const app = () => {
   const options = {};
   options.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-  options.secretOrKey = passportSecret;
+  options.secretOrKey = config.passportSecret;
   use(
     new Strategy(options, (payload, done) => {
       User.findOne({ "account.userName": payload.userName }, (err, user) => {
@@ -42,7 +42,7 @@ const app = () => {
  */
 const isValidToken = (token) => {
   try {
-    verify(token, passportSecret);
+    verify(token, config.passportSecret);
     return true;
   } catch (error) {
     // error

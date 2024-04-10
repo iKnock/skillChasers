@@ -1,7 +1,7 @@
 import { verifyAccessToken } from '../middlewares/requireLogin.js';
 
 import jwt from 'jsonwebtoken';
-import * as keys from '../config/keys.mjs';
+import { config } from '../config/keys.mjs';
 import bcrypt from 'bcrypt';
 import util from 'util';
 
@@ -119,8 +119,8 @@ const userRoutes = app => {
                 const savedUser = await user.save();
 
                 // Sign token
-                const token = jwt.sign({ userName: account.userName }, keys.passportSecret, {
-                    expiresIn: keys.passportExpiresIn,
+                const token = jwt.sign({ userName: account.userName }, config.passportSecret, {
+                    expiresIn: config.passportExpiresIn,
                 });
                 const userToReturn = { ...savedUser.toJSON(), ...{ token } };
 

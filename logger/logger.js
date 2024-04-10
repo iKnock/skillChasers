@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-import { logDirName } from '../config/keys.mjs';
+import { config } from '../config/keys.mjs';
 const { combine, timestamp, label, printf } = format;
 
 const apiFormat = printf(({ level, message, label, timestamp }) => {
@@ -17,7 +17,7 @@ const apiFormat = printf(({ level, message, label, timestamp }) => {
 
 // create log file if not exist
 //const logDirectory = path.join(__dirname, process.env.LOG_DIR_NAME);
-const logDirectory = join(__dirname, logDirName);
+const logDirectory = join(__dirname, config.logDirName);
 if (!existsSync(logDirectory)) {
     mkdirSync(logDirectory);
 }
