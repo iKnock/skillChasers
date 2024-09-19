@@ -2,12 +2,20 @@ version: "3"
 services:
   mongodb:
     image: "mongo:latest"
+    container_name: mongodb
     ports:
       - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
   skillchasers-app:
     depends_on:
       - mongodb
     restart: on-failure
     build: .
+    container_name: skillchasers-app
     ports:
       - "5000:5000"
+    environment:
+      MONGO_URL: "mongodb://mongodb:27017/skillchasersdb"
+volumes:
+  mongo-data:
