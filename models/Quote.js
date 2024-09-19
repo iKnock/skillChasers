@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const { Schema } = mongoose;
+import mongoose from 'mongoose';
+const { Schema, model } = mongoose;
 
 const quoteSchema = new Schema({
     userName: {
@@ -32,4 +32,5 @@ const quoteSchema = new Schema({
     _user: { type: Schema.Types.ObjectId, ref: 'Quote' }
 });
 
-mongoose.model('Quote', quoteSchema);
+const Quote = mongoose.model('Quote', quoteSchema);
+export default Quote;

@@ -1,11 +1,8 @@
-const mongoose = require('mongoose');
-const { verifyAccessToken } = require('../middlewares/requireLogin');
+import { verifyAccessToken } from '../middlewares/requireLogin.js';
+import Quote from '../models/Quote.js';
+import Logger from '../logger/logger.js';
 
-const Quote = mongoose.model('Quote');
-
-const Logger = require('../logger/logger');
-
-module.exports = app => {
+const quoteRoutes = app => {
 
   app.get('/api/skillChasers/quotes', verifyAccessToken, async (req, res) => {
     Logger.info('<Quote Route: > - Read all quotes : ' + req.ip);
@@ -100,3 +97,5 @@ module.exports = app => {
 
   });
 };
+
+export { quoteRoutes };

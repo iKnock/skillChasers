@@ -1,8 +1,14 @@
-const fs = require('fs');
-const path = require('path');
+import { existsSync, mkdirSync } from 'fs';
+import { join, dirname } from 'path';
 
-const morgan = require('morgan');
-const { createLogger, format, transports } = require('winston');
+import winston from 'winston';
+const { createLogger, format, transports } = winston;
+
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+import { config } from '../config/keys.mjs';
 const { combine, timestamp, label, printf } = format;
 
 const apiFormat = printf(({ level, message, label, timestamp }) => {
@@ -10,11 +16,11 @@ const apiFormat = printf(({ level, message, label, timestamp }) => {
 });
 
 // create log file if not exist
-const logDirectory = path.join(__dirname, process.env.LOG_DIR_NAME);
-if (!fs.existsSync(logDirectory)) {
-    fs.mkdirSync(logDirectory);
+//const logDirectory = path.join(__dirname, process.env.LOG_DIR_NAME);
+const logDirectory = join(__dirname, config.logDirName);
+if (!existsSync(logDirectory)) {
+    mkdirSync(logDirectory);
 }
-
 
 // app loger config
 const Logger = createLogger({
@@ -63,4 +69,4 @@ Logger.stream = {
     },
 };
 
-module.exports = Logger;
+export default Logger;

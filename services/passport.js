@@ -1,20 +1,25 @@
-var passport = require("passport");
-var passportJWT = require("passport-jwt");
-var jwt = require("jsonwebtoken");
+import passport from "passport";
+const { use } = passport;
 
-var ExtractJwt = passportJWT.ExtractJwt;
-var JwtStrategy = passportJWT.Strategy;
+import { ExtractJwt as _ExtractJwt, Strategy as _Strategy } from "passport-jwt";
+import jsonwebtoken from "jsonwebtoken";
+const { verify } = jsonwebtoken;
 
-const keys = require('../config/keys');
+var ExtractJwt = _ExtractJwt;
+var JwtStrategy = _Strategy;
 
-const mongoose = require('mongoose');
-const User = mongoose.model('User');
+import { config } from '../config/keys.mjs';
+
+import mongoose from 'mongoose';
+const { model } = mongoose;
+
+const User = model('User');
 
 const app = () => {
   const options = {};
   options.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-  options.secretOrKey = keys.passportSecret;
-  passport.use(
+  options.secretOrKey = config.passportSecret;
+  use(
     new Strategy(options, (payload, done) => {
       User.findOne({ "account.userName": payload.userName }, (err, user) => {
         if (err) return done(err, false);
@@ -37,7 +42,7 @@ const app = () => {
  */
 const isValidToken = (token) => {
   try {
-    jwt.verify(token, keys.passportSecret);
+    verify(token, config.passportSecret);
     return true;
   } catch (error) {
     // error
@@ -63,6 +68,9 @@ const retrieveToken = (headers) => {
   }
 };
 
-exports.app = app;
-exports.isValidToken = isValidToken;
-exports.retrieveToken = retrieveToken;
+const _app = app;
+export { _app as app };
+const _isValidToken = isValidToken;
+export { _isValidToken as isValidToken };
+const _retrieveToken = retrieveToken;
+export { _retrieveToken as retrieveToken };

@@ -1,14 +1,10 @@
-const jwt = require('jsonwebtoken');
-const keys = require('../config/keys');
+import jwt from 'jsonwebtoken';
+import { config } from '../config/keys.mjs';
+import bcrypt from 'bcrypt';
+import User from '../models/User.js';
+import Logger from '../logger/logger.js';
 
-const bcrypt = require('bcrypt');
-
-const mongoose = require('mongoose');
-const User = mongoose.model('User');
-
-const Logger = require('../logger/logger');
-
-module.exports = app => {
+const userAccountRoutes = app => {
 
     //login user
     app.post('/api/skillChasers/user/login', async (req, res) => {
@@ -24,8 +20,8 @@ module.exports = app => {
 
                     if (isMatched === true) {
                         // Sign token
-                        const token = jwt.sign({ userName }, keys.passportSecret, {
-                            expiresIn: 1000000,
+                        const token = jwt.sign({ userName }, config.passportSecret, {
+                            expiresIn: config.passportExpiresIn,
                         });
                         const userToReturn = { ...user.toJSON(), ...{ token } };
                         //delete userToReturn.hashedPassword;
@@ -45,3 +41,5 @@ module.exports = app => {
         }
     });
 };
+
+export { userAccountRoutes };
