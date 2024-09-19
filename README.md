@@ -9,3 +9,6 @@ docker run -p 5000:5000 skillchasers
 
 # to start all service
 docker-compose up
+
+# to stop all service
+docker-compose down
